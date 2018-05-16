@@ -4,12 +4,16 @@ package Views
 import javafx.application.Application
 import javafx.geometry.Insets
 import javafx.scene.Scene
-import javafx.scene.control.{TextField}
-import javafx.scene.layout.{GridPane}
+import javafx.scene.control.TextField
+import javafx.scene.layout.GridPane
 import javafx.stage.Stage
 import javafx.geometry.Pos
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Priority
+import javafx.scene.paint.Color
+import javafx.scene.text.Text
+import javafx.scene.text.Font
+
 import scala.util.Random
 
 object Kakuro
@@ -27,26 +31,44 @@ class Kakuro extends Application
   def createContainer(i: Int): HBox ={
 
 
-    val textField = new TextField()
-    textField.setPrefHeight(400)
-
-
     i match {
-      case 0 => textField.setStyle("-fx-background-color: black")
-      case 1 => textField.setStyle("-fx-background-color: white")
-      case _ => textField.setStyle("-fx-background-color: red")
+      case 0 =>
+
+
+          val text = new Text
+          text.setFont(Font.font("Fira Code", 15))
+          text.setFill(Color.WHITE)
+          text.setText( " " + (Random.nextInt(34) + 9).toString  + "\n    " + (Random.nextInt(34) + 9).toString + " ")
+
+
+          val container = new HBox(text)
+          container.setAlignment(Pos.CENTER)
+          container.setPadding(new Insets(1))
+          container.setStyle("-fx-background-color: linear-gradient(to right bottom, #2f3441 50%, #212531 50%);")
+
+          HBox.setHgrow(text, Priority.ALWAYS)
+
+          container
+
+      case 1 =>
+
+        val textField = new TextField()
+        textField.setPrefHeight(400)
+        textField.setStyle("-fx-background-color: white")
+        val container = new HBox(textField)
+        container.setAlignment(Pos.CENTER)
+        container.setPadding(new Insets(1))
+        HBox.setHgrow(textField, Priority.ALWAYS)
+        container.setStyle("-fx-background-color: black")
+
+
+        container
+
+
     }
-
-    val container = new HBox(textField)
-    container.setAlignment(Pos.CENTER)
-    container.setPadding(new Insets(1))
-    HBox.setHgrow(textField, Priority.ALWAYS)
-
-    container
-
   }
 
-  def generateLogicBoard(rowSize:Int, colSize:Int) = {
+   def  generateLogicBoard(rowSize:Int, colSize:Int): Array[Array[Int]] = {
 
     val board =  Array.ofDim[Int](rowSize,colSize)
 
@@ -87,7 +109,7 @@ class Kakuro extends Application
     //3 CENTER
     for(i <- 1 until colSize/2)
       if(board(rowSize/2 )(i-1) == 1) {
-        board((rowSize / 2) )(i) = 0
+        board(rowSize / 2 )(i) = 0
         board(rowSize / 2 )(colSize - i - 1) = 0
       }else{
         board(rowSize / 2 )(i) = 1
@@ -157,24 +179,17 @@ class Kakuro extends Application
 
     primaryStage.setTitle("KAKURO MY DEAR!")
 
-    /*
-    val btn = new Button
-    btn.setText("Say 'Hello World'")
-    btn.setOnAction((e: ActionEvent) => {
-      println("Hello World!")
-    })
-    */
+    val rowSize = 9
+    val colSize = 8
 
 
-    val rowSize = 11
-    val colSize = 10
     val logicBoard = generateLogicBoard(rowSize, colSize)
     val root = fillScene(logicBoard,rowSize,colSize)
 
-    /// let's generate Kakuro board
 
-    primaryStage.setScene(new Scene(root, 400, 400))
-    primaryStage.show
+    primaryStage.setScene(new Scene(root, 500, 500))
+    primaryStage.show()
+
   }
 
 }
