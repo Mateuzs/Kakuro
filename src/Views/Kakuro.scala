@@ -36,16 +36,17 @@ class Kakuro extends Application
 
 
           val text = new Text
+
           text.setFont(Font.font("Fira Code", 15))
           text.setFill(Color.WHITE)
           text.setText( " " + (Random.nextInt(34) + 9).toString  + "\n    " + (Random.nextInt(34) + 9).toString + " ")
 
 
           val container = new HBox(text)
+          container.setPrefHeight(400)
           container.setAlignment(Pos.CENTER)
           container.setPadding(new Insets(1))
           container.setStyle("-fx-background-color: linear-gradient(to right bottom, #2f3441 50%, #212531 50%);")
-
           HBox.setHgrow(text, Priority.ALWAYS)
 
           container
@@ -60,6 +61,17 @@ class Kakuro extends Application
         container.setPadding(new Insets(1))
         HBox.setHgrow(textField, Priority.ALWAYS)
         container.setStyle("-fx-background-color: black")
+
+        container
+      case -1 =>
+
+        val textField = new TextField()
+        val container = new HBox(textField)
+        container.setAlignment(Pos.CENTER)
+        container.setPadding(new Insets(1))
+        HBox.setHgrow(textField, Priority.ALWAYS)
+        container.setStyle("-fx-background-color: red")
+
 
 
         container
@@ -109,8 +121,14 @@ class Kakuro extends Application
     //3 CENTER
     for(i <- 1 until colSize/2)
       if(board(rowSize/2 )(i-1) == 1) {
-        board(rowSize / 2 )(i) = 0
-        board(rowSize / 2 )(colSize - i - 1) = 0
+        if(i == 1){
+          board(rowSize / 2)(i) = 1
+          board(rowSize / 2)(colSize - i - 1) = 1
+
+        } else{
+          board(rowSize / 2)(i) = 0
+          board(rowSize / 2)(colSize - i - 1) = 0
+        }
       }else{
         board(rowSize / 2 )(i) = 1
         board(rowSize / 2 )(colSize - i - 1) = 1
@@ -121,18 +139,20 @@ class Kakuro extends Application
     for(i <- 1 until (rowSize / 2)){
       for(j <- 1 until colSize) {
         if(board(i)(j) == -1) {
-          board(i)(j) = Random.nextInt(2)
+          board(i)(j) = (Random.nextFloat() + 0.8).toInt
           board(rowSize - i - 1)(colSize - j - 1) = board(i)(j)
         }
       }
     }
-    // 5. RELEASE BOUNDED WHITE CELLS
+
+
+    // 5. RELEASE BOUNDED WHITE  OR BLACK CELLS
     for(i <- 1 to (rowSize / 2)){
       for(j <- 1 until (colSize - 1)) {
-        if(board(i-1)(j) == 0 &&
-          board(i)(j-1) == 0 &&
-          board(i+1)(j) == 0 &&
-          board(i)(j+1) == 0 &&
+        if (board(i - 1)(j) == 0 &&
+          board(i)(j - 1) == 0 &&
+          board(i + 1)(j) == 0 &&
+          board(i)(j + 1) == 0 &&
           board(i)(j) == 1) {
 
           board(i - 1)(j) = 1
@@ -140,15 +160,12 @@ class Kakuro extends Application
           board(i + 1)(j) = 1
           board(i)(j + 1) = 1
 
-          board(rowSize - i  - 2)(colSize - j - 1) = 1
-          board(rowSize - i  - 1)(colSize - j - 2) = 1
-          board(rowSize - i )(colSize - j - 1) = 1
-          board(rowSize - i  - 1)(colSize - j) = 1
-
-
+          board(rowSize - i - 2)(colSize - j - 1) = 1
+          board(rowSize - i - 1)(colSize - j - 2) = 1
+          board(rowSize - i)(colSize - j - 1) = 1
+          board(rowSize - i - 1)(colSize - j) = 1
         }
       }
-
     }
 
     board
@@ -175,8 +192,6 @@ class Kakuro extends Application
   override def start(primaryStage: Stage)
   {
 
-
-
     primaryStage.setTitle("KAKURO MY DEAR!")
 
     val rowSize = 9
@@ -187,7 +202,7 @@ class Kakuro extends Application
     val root = fillScene(logicBoard,rowSize,colSize)
 
 
-    primaryStage.setScene(new Scene(root, 500, 500))
+    primaryStage.setScene(new Scene(root, 550, 500))
     primaryStage.show()
 
   }
