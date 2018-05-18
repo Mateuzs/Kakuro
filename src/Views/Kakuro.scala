@@ -4,7 +4,7 @@ package Views
 import javafx.application.Application
 import javafx.geometry.Insets
 import javafx.scene.Scene
-import javafx.scene.control.TextField
+import javafx.scene.control.{Button, TextField}
 import javafx.scene.layout.GridPane
 import javafx.stage.Stage
 import javafx.geometry.Pos
@@ -134,6 +134,8 @@ class Kakuro extends Application
         board(rowSize / 2 )(colSize - i - 1) = 1
       }
 
+     if(colSize % 2 == 1 ) board(rowSize/2 )(colSize/2) = 1
+
 
     //4. RANDOMIZE THE REST
     for(i <- 1 until (rowSize / 2)){
@@ -172,6 +174,28 @@ class Kakuro extends Application
 
   }
 
+  def generateKeyButton(i: Int) = {
+
+    val button = new Button
+    button.setText(i.toString)
+    button.setId("Button")
+
+    val container = new HBox(button)
+    container.setId("ButtonContainer")
+    HBox.setHgrow(button, Priority.ALWAYS)
+
+
+    container
+  }
+
+  def createEmptyContainer(): HBox = {
+
+    val emptyContainer = new HBox
+    emptyContainer.setId("ButtonContainer")
+
+    emptyContainer
+  }
+
 
 
   def fillScene( board: Array[Array[Int]], rowSize: Int, colSize: Int): GridPane  = {
@@ -179,10 +203,26 @@ class Kakuro extends Application
     val root = new GridPane
     for(i <- 0 until rowSize){
       for( j <- 0 until colSize){
-        root.add(createContainer(board(i)(j)), j , i)
+        root.add(createContainer(board(i)(j)), j + 1 , i + 1)
       }
     }
 
+
+    for (i <- 0 to rowSize + 2){
+      root.add(createEmptyContainer(), 0, i )
+      root.add(createEmptyContainer(), colSize + 1, i )
+    }
+
+    for(i <- 0 to colSize + 1){
+
+      root.add(createEmptyContainer(), i, 0 )
+      root.add(createEmptyContainer(), i, rowSize + 2 )
+
+    }
+
+    for(i <- 1 to 9){
+      root.add( generateKeyButton(i), i, rowSize + 1 )
+    }
 
     root
   }
@@ -195,14 +235,16 @@ class Kakuro extends Application
     primaryStage.setTitle("KAKURO MY DEAR!")
 
     val rowSize = 9
-    val colSize = 8
+    val colSize = 9
 
 
     val logicBoard = generateLogicBoard(rowSize, colSize)
     val root = fillScene(logicBoard,rowSize,colSize)
 
+    val scene = new Scene(root, 700, 600)
+    scene.getStylesheets.add("Views/styles.css")
 
-    primaryStage.setScene(new Scene(root, 550, 500))
+    primaryStage.setScene(scene)
     primaryStage.show()
 
   }
