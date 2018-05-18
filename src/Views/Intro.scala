@@ -6,7 +6,7 @@ import javafx.scene.control.Button
 import javafx.scene.layout.{GridPane, HBox, Priority}
 import javafx.scene.text.Text
 import javafx.stage.Stage
-
+import Controllers.IntroController
 
 
 object Intro
@@ -20,11 +20,19 @@ object Intro
 
 class Intro extends Application {
 
-  def createButton(text :String): HBox = {
 
+  def createButton(text :String, stage: Stage): HBox = {
+
+    val controller = new IntroController
     val button = new Button
     button.setText(text)
     button.setId("Button")
+
+    text match {
+
+      case "PLAY" => button.setOnAction(controller.playBtnHandlerEvent(stage))
+      case _ =>
+    }
 
 
     val container = new HBox(button)
@@ -50,16 +58,16 @@ class Intro extends Application {
 
 
 
-  def generateIntroBox(): GridPane = {
+  def generateIntroBox(stage: Stage): GridPane = {
 
     val gridPane = new GridPane
 
 
 
     gridPane.add(createText("KAKURO MY DEAR!"), 1, 0)
-    gridPane.add(createButton("PLAY"), 1, 1)
-    gridPane.add(createButton("SCORES"), 1, 2)
-    gridPane.add(createButton("QUIT"), 1, 3)
+    gridPane.add(createButton("PLAY",stage), 1, 1)
+    gridPane.add(createButton("SCORES",stage), 1, 2)
+    gridPane.add(createButton("QUIT",stage), 1, 3)
     gridPane.add(createText(""), 1, 4)
 
 
@@ -80,7 +88,8 @@ class Intro extends Application {
   override def start(primaryStage: Stage)
   {
 
-    val root = generateIntroBox
+
+    val root = generateIntroBox(primaryStage)
     val scene = generateScene(root)
     scene.getStylesheets.add("Views/styles.css")
     primaryStage.setScene(scene)

@@ -189,7 +189,7 @@ class Kakuro extends Application
 
 
 
-  override def start(primaryStage: Stage)
+  def start(primaryStage: Stage)
   {
 
     primaryStage.setTitle("KAKURO MY DEAR!")
