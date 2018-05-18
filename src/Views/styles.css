@@ -24,8 +24,19 @@
     -fx-padding: 10;
     -fx-alignment: center;
     -fx-pref-height: 400;
-    -fx-pref-width: 400;
+    -fx-pref-width: 4000;
     -fx-background-color: black;
 }
 
+
+#IntroText {
+
+    -fx-fill: darkred;
+    -fx-font-size: 40;
+    -fx-font-family: "Fira Code";
+    -fx-font-weight: bold;
+    -fx-aligment: center;
+    -fx-background-color: black;
+
+}
 
